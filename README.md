@@ -68,7 +68,19 @@ The goal is to predict whether a given piece of text comes from the Bible or not
 
 ## Files in This Project
 
-- 
+- data_scripts
+  - bible_dataset_script.py
+  - non_bible_dataset_script.py
+  - merge.py
+- models
+  - NeuralNetwork.py
+  - scaler.joblib
+  - train_logreg.py
+  - train_neuralnetwork.py
+  - train_randomforest.py
+  - vectorizer.joblib
+- test_models.py
+- README.md
 
 ## Timeline
 
