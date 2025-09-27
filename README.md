@@ -1,25 +1,34 @@
 # Bible-or-Not Text Classification
 
-This project uses a dataset of Bible verses and non-Bible text to build a Random Forest Classifier and a Logistic Regression Classifier in scikit-learn, as well as a Neural Network I coded from scratch and one in PyTorch, and finally a  that classifies text as either **Bible** or **Not Bible**. I completed this project in August 2025, implementing a full pipeline for text preprocessing, feature extraction, model training, evaluation, and prediction.
+This project classifies text as **Bible** or **Not Bible** using multiple machine learning and deep learning approaches. It started with classical ML models in scikit-learn and a neural network coded from scratch in NumPy, and has since expanded to include a PyTorch-based Neural Network and a RoBERTa Transformer classifier.  
 
 ## Project Overview
 
-The goal is to predict whether a given piece of text comes from the Bible or not. The model uses TF-IDF vectorization to convert text into numerical features and a Random Forest Classifier, a Logistic Regression Classifier, and a Neural Network for prediction. The trained model can classify both dataset test samples and new custom inputs.
+The goal is to predict whether a given piece of text comes from the Bible or not.  
+Models implemented:  
+- **Logistic Regression** (scikit-learn)  
+- **Random Forest Classifier** (scikit-learn)  
+- **Neural Network from scratch** (NumPy implementation)  
+- **Neural Network (PyTorch)**  
+- **RoBERTa Transformer** (Hugging Face)  
+All models use TF-IDF features or embeddings, depending on architecture, and can classify both dataset test samples and new custom inputs.  
 
-## Dataset
+## Dataset  
 
-- Contains labeled samples of Bible verses and non-Bible text
-- Split:
-  - ~49,600 samples for training
-  - ~12,400 samples for testing
-- Classes: `Bible`, `Not Bible`
+- **Bible text:** NIV Bible ([source](https://github.com/jadenzaleski/BibleTranslations/blob/master/NIV/NIV_bible.json))  
+- **Non-Bible text:** Sentences sampled from various books from Project Gutenberg (classics).  
+- **Split:**  
+  - ~49,600 samples for training  
+  - ~12,400 samples for testing  
+- **Classes:** `Bible`, `Not Bible`  
 
-## Tools and Libraries
-
-- Python  
-- scikit-learn (`RandomForestClassifier`, `LogesticRegression`, `TfidfVectorizer`, `StandardScaler`)  
-- pandas & NumPy (data handling)  
-- joblib (model persistence)  
+## Tools and Libraries  
+- **Python**  
+- **scikit-learn**: `RandomForestClassifier`, `LogisticRegression`, `TfidfVectorizer`, `StandardScaler`  
+- **NumPy & pandas**: data handling  
+- **joblib**: model persistence  
+- **PyTorch**: Neural Network implementation  
+- **transformers (Hugging Face)**: RoBERTa fine-tuning  
 
 ## Process and Methodology
 
@@ -36,33 +45,50 @@ The goal is to predict whether a given piece of text comes from the Bible or not
 
 ### 3. Model Training  
 #### Classical ML  
-- **Random Forest**:  
+- **Random Forest**:
+  - Implemented in train_randomforest.py
   - `n_estimators = 50`, `max_depth = None`, `n_jobs = -1`  
-- **Logistic Regression**:  
+- **Logistic Regression**:
+  - Implemented in train_logreg.py 
   - `max_iter = 10000`  
 
-#### Neural Network (from scratch with NumPy)  
+#### Neural Network (from scratch with NumPy)
+- Implemented in train_pytorch_nn.py
 - Dense layer with 80 neurons, L2 regularization = `1e-2`  
 - ReLU + Dropout (0.35)  
 - Dense layer with 40 neurons, L2 regularization = `1e-2`  
 - ReLU + Dropout (0.35)  
 - Output layer: 2 neurons, Softmax  
 - Loss: Categorical Cross-Entropy  
-- Optimizer: Adam (`lr=0.00005`, decay=`1e-3`)  
+- Optimizer: Adam (`lr=5e-5`, decay=`1e-3`)  
 
 #### Neural Network (PyTorch)  
-- Implemented in `pytorch_nn_model.py` (weights saved as `.pth`, **not included due to size**)  
-- Trained with Adam optimizer and dropout layers to prevent overfitting  
+- Implemented in `pytorch_nn_model.py`
+- Dense layer with 80 neurons
+- ReLU + Dropout (0.35)  
+- Dense layer with 40 neurons 
+- ReLU + Dropout (0.35)  
+- Output layer: 2 neurons, Softmax  
+- Loss: Cross-Entropy Loss  
+- Optimizer: Adam (`lr=4e-5`, weight_decay=`1e-3`)  
 
 #### RoBERTa Transformer  
 - Notebook: `train_roberta_bible.ipynb`  
-- Uses Hugging Face `transformers` library for fine-tuning  
-- Provides state-of-the-art results on Bible-or-Not classification
+- Uses Hugging Face `transformers` for fine-tuning  
+- Optimized for Google Colab T4 GPU with the following hyperparameters:  
+  - Epochs: 3  
+  - Train batch size: 8  
+  - Eval batch size: 16  
+  - Warmup steps: 500  
+  - Weight decay: 0.01  
+  - Evaluation & checkpoint saving: each epoch  
+  - Best model selection: based on accuracy  
+  - Mixed precision (fp16): enabled  
   
-### 4. Evaluation
-- Evaluated accuracy on the test set
-- Checked precision/recall and confusion matrix
-- Tested predictions on custom inputs  
+### 4. Evaluation  
+
+- Metrics: Accuracy, Precision, Recall, Confusion Matrix  
+- Tested both on the dataset test split and custom user inputs  
 
 ## Final Model Performance
 
@@ -86,7 +112,9 @@ The goal is to predict whether a given piece of text comes from the Bible or not
   - scaler.joblib
   - train_logreg.py
   - train_neuralnetwork.py
+  - train_pytorch_nn.py
   - train_randomforest.py
+  - train_roberta.ipynb
   - vectorizer.joblib
 - test_models.py
 - README.md
